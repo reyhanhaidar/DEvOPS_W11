@@ -2,11 +2,12 @@
 
 FROM composer:lts AS deps
 WORKDIR /app
-RUN --mount=type=bind,source=composer.json,target=composer.json \
-    --mount=type=bind,source=composer.lock,target=composer.lock \
+RUN --mount=type=bind,source=composer.json,target=composer.json,readonly=false \
+    --mount=type=bind,source=composer.lock,target=composer.lock,readonly=false \
     --mount=type=cache,target=/tmp/cache \
     composer config cache-dir /tmp/cache && \
     composer install --no-dev --no-interaction
+
 
 # New tests stage
 FROM deps AS tests
