@@ -2,17 +2,13 @@
 
 FROM composer:lts AS deps
 WORKDIR /app
-RUN --mount=type=bind,source=composer.json,target=composer.json,readonly=false \
-    --mount=type=bind,source=composer.lock,target=composer.lock,readonly=false \
-    --mount=type=cache,target=/tmp/cache \
-    composer config cache-dir /tmp/cache && \
+RUN composer config cache-dir /tmp/cache && \
     composer install
 
-
-# New tests stage
 FROM deps AS tests
-RUN --mount=type=bind,source=./tests,target=/app/tests \
-    vendor/bin/phpunit --configuration phpunit.xml
+COPY ./tests /app/tests
+COPY phpunit.xml /app/phpunit.xml
+RUN vendor/bin/phpunit --configuration phpunit.xml
 
 FROM php:8.2-apache AS final
 RUN docker-php-ext-install pdo pdo_mysql opcache \
