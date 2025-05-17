@@ -58,5 +58,5 @@ volumes:
 
 secrets:
   db-password:
-    file: db/password.txt
+    file: /home/rhaidar/Downloads/dockeri/docker-php-sample/db/password.txt
 
