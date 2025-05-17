@@ -8,6 +8,11 @@ RUN --mount=type=bind,source=composer.json,target=composer.json \
     composer config cache-dir /tmp/cache && \
     composer install --no-dev --no-interaction
 
+# New tests stage
+FROM deps AS tests
+RUN --mount=type=bind,source=./tests,target=/app/tests \
+    vendor/bin/phpunit --configuration phpunit.xml
+
 FROM php:8.2-apache AS final
 RUN docker-php-ext-install pdo pdo_mysql opcache \
  && a2enmod rewrite \
@@ -19,4 +24,3 @@ COPY ./src /var/www/html/
 
 USER www-data
 EXPOSE 80
-
