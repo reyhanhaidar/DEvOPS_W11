@@ -9,6 +9,10 @@ RUN --mount=type=bind,source=composer.json,target=composer.json \
 FROM php:8.2-apache as final
 RUN docker-php-ext-install pdo pdo_mysql
 RUN mv "$PHP_INI_DIR/php.ini-production" "$PHP_INI_DIR/php.ini"
+FROM deps as test
+WORKDIR /app
+RUN --mount=type=bind,source=tests,target=/app/tests \
+    ./vendor/bin/phpunit --testdox
 COPY --from=deps /app/vendor/ /var/www/html/vendor
 COPY ./src /var/www/html
 USER www-data
