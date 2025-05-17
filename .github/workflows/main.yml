@@ -29,4 +29,4 @@ jobs:
           platforms: linux/amd64,linux/arm64
           push: true
           target: final
-          tags: qlsomlt/${{ github.event.repository.name.toLowerCase() }}:latest
+          tags: qlsomlt/devops_w11:latest
